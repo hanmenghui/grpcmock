@@ -1,0 +1,30 @@
+// Copyright 2019 Leyantech Ltd. All Rights Reserved.
+
+syntax = "proto3";
+
+import "leyan_proto/user_center/user_center.proto";
+import "google/protobuf/any.proto";
+import "leyan_proto/gaia/service_option.proto";
+
+option java_multiple_files = true;
+option java_package = "com.leyantech.codex.proto.base";
+option go_package = "git.leyantech.com/leyan/leyan-proto-golang/codex/codex";
+
+package codex.proto;
+
+
+message RpcResponseCode{
+  int32 error_code = 1;
+  string error_message = 2;
+}
+
+message PageInfo {
+  int32 page_size = 1; // 页大小
+  int32 page_num = 2; // 当前页
+  int32 total = 3;
+}
+
+message StoreBaseInfoApiDTO{
+  string store_no = 1;
+  string config_id = 2;
+}
