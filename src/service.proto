@@ -1,1 +1,73 @@
 
+// Copyright 2019 Leyantech Ltd. All Rights Reserved.
+
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+import "leyan_proto/gaia/service_option.proto";
+import "src/codex_base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.leyantech.codex.proto.trigger";
+option go_package = "git.leyantech.com/leyan/leyan-proto-golang/codex/trigger";
+
+
+package codex.proto;
+
+message ScenarioTriggerValueApiDTO {
+  string trigger_id = 1;
+  repeated string values = 2;
+}
+
+
+message ScenarioTriggerApiDTO {
+  int32 trigger_type = 1;
+  repeated ScenarioTriggerValueApiDTO trigger_value_list =2;
+}
+
+
+message ScenarioTriggerListApiDTO {
+  string scenario_unify_id = 1;
+  repeated ScenarioTriggerApiDTO trigger_list = 2;
+}
+
+//get request.
+message GetScenarioTriggerApiRequest {
+  string store_no = 1; // store id
+  string config_id = 2; //config Id,即染色ID.
+  int32 sourceType = 3;
+  repeated string scenarios_unify_ids = 4; // 需要指定返回的统一场景ID列表
+}
+
+message GetScenarioTriggerApiResponse {
+  string store_id = 1; // store id
+  string config_id = 2; // config Id,即染色ID.
+  int32 sourceType = 3;
+  repeated ScenarioTriggerListApiDTO scenario_trigger_list = 4; // 场景配置数据，按照 {统一场景ID: [场景数据]} 格式返回
+  RpcResponseCode response_code = 5;
+}
+
+//reset request.
+message ResetScenarioTriggerApiRequest {
+  string store_no = 1; // store id
+  string config_id = 2; //config Id,即染色ID.
+  int32 sourceType = 3;
+  string scenario_unify_id = 4; // 需要指定返回的统一场景ID列表
+  repeated ScenarioTriggerApiDTO scenario_triggers = 5;
+}
+
+message ResetScenarioTriggerApiResponse {
+  RpcResponseCode response_code = 4;
+}
+
+
+
+// Codex Grpc Service
+service ScenarioTriggerGrpcService {
+
+  // 获取最新global.groovy或<store_id>.groovy
+  rpc get_scenario_triggers(GetScenarioTriggerApiRequest) returns (GetScenarioTriggerApiResponse) {}
+
+  // 获取最新global.groovy或<store_id>.groovy
+  rpc reset_scenario_triggers(ResetScenarioTriggerApiRequest) returns (ResetScenarioTriggerApiResponse) {}
+}
